@@ -17,7 +17,7 @@ import {
 } from "../redux/localCartSlice";
 import { Link } from "react-router-dom";
 
-export default function Cart() {
+function Cart() {
   const dispatch = useDispatch();
   const { carts, status } = useSelector(s => s.cartSlice);
   const { 
@@ -540,3 +540,5 @@ export default function Cart() {
     </div>
   );
 }
+
+export default Cart; // FAQAT BITTA EXPORT DEFAULT

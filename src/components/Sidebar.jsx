@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { fetchProductsByCategory } from "../redux/productSlice";
 
-export default function Sidebar() {
+function Sidebar() {
   const dispatch = useDispatch();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -70,3 +70,5 @@ export default function Sidebar() {
     </aside>
   );
 }
+
+export default Sidebar; // FAQAT BITTA EXPORT DEFAULT

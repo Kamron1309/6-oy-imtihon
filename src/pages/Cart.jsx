@@ -17,7 +17,7 @@ import {
 } from "../redux/localCartSlice";
 import { Link } from "react-router-dom";
 
-export default function Cart() {
+function Cart() {
   const dispatch = useDispatch();
   const { carts, status } = useSelector(s => s.cartSlice);
   const { 
@@ -44,6 +44,7 @@ export default function Cart() {
   const handleRemoveFromMarket = async (id) => {
     try {
       await dispatch(removeFromMarketAPI(id)).unwrap();
+      alert('✅ Mahsulot marketdan muvaffaqiyatli o\'chirildi!');
     } catch (error) {
       alert('❌ Marketdan o\'chirishda xatolik');
     }
@@ -52,6 +53,7 @@ export default function Cart() {
   const handleRemoveFromBuyurtma = async (id) => {
     try {
       await dispatch(removeFromBuyurtmaAPI(id)).unwrap();
+      alert('✅ Buyurtma muvaffaqiyatli o\'chirildi!');
     } catch (error) {
       alert('❌ Buyurtmadan o\'chirishda xatolik');
     }
@@ -538,3 +540,5 @@ export default function Cart() {
     </div>
   );
 }
+
+export default Cart; // FAQAT BITTA EXPORT DEFAULT

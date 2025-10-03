@@ -1,3 +1,4 @@
+// src/components/SkeltonComponent.jsx
 import { Skeleton } from "antd";
 import React from "react";
 

@@ -1,12 +1,11 @@
-[file name]: src/pages/Search.jsx
-[file content begin]
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { ProductCard, SkeltonComponent } from "../components";
+import ProductCard from "../components/ProductCard";
+import SkeletonComponent from "../components/SkeletonComponent";
 import { searchProducts, fetchProducts } from "../redux/productSlice";
 
-export default function Search(){
+function Search() {
   const [q, setQ] = useState('');
   const dispatch = useDispatch();
   const { products, status } = useSelector(s => s.productSlice);
@@ -51,7 +50,7 @@ export default function Search(){
       </form>
       
       {status === 'loading' ? (
-        <SkeltonComponent />
+        <SkeletonComponent />
       ) : products.length > 0 ? (
         <div>
           <p className="text-gray-600 mb-4">"{q}" so'rovi bo'yicha {products.length} ta mahsulot topildi</p>
@@ -73,6 +72,7 @@ export default function Search(){
         </div>
       )}
     </div>
-  )
+  );
 }
-[file content end]
+
+export default Search; // Faqat bitta export default

@@ -3,12 +3,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-export default function Header() {
+function Header() {
   const { data: localCart } = useSelector(s => s.localCartSlice);
   const { data: likes } = useSelector(s => s.likeSlice);
   const { marketProducts, buyurtmalar } = useSelector(s => s.localCartSlice);
 
-  const totalItems = localCart.length + marketProducts.length + buyurtmalar.length;
+  const totalItems = localCart.reduce((total, item) => total + item.qty, 0) + marketProducts.length + buyurtmalar.length;
 
   return (
     <header className="bg-white shadow-sm border-b sticky top-0 z-50">
@@ -79,3 +79,5 @@ export default function Header() {
     </header>
   );
 }
+
+export default Header; // FAQAT BITTA EXPORT DEFAULT

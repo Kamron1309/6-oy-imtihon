@@ -2,7 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Footer() {
+function Footer() {
   return (
     <footer className="bg-gray-900 text-white mt-12">
       <div className="container mx-auto px-4 py-8">
@@ -47,3 +47,5 @@ export default function Footer() {
     </footer>
   );
 }
+
+export default Footer; // FAQAT BITTA EXPORT DEFAULT

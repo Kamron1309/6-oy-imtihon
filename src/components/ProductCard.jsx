@@ -2,10 +2,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addToLike, toggleLike } from "../redux/likeSlice";
+import { toggleLike } from "../redux/likeSlice";
 import { addToCartLocal, addToMarketAPI, addToBuyurtmaAPI } from "../redux/localCartSlice";
 
-export default function ProductCard({ product }) {
+function ProductCard({ product }) {
   const dispatch = useDispatch();
   const { data: likes } = useSelector(s => s.likeSlice);
   
@@ -15,6 +15,7 @@ export default function ProductCard({ product }) {
     e.preventDefault();
     e.stopPropagation();
     dispatch(addToCartLocal(product));
+    alert('✅ Mahsulot local savatga qo\'shildi!');
   };
 
   const handleAddToMarket = async (e) => {
@@ -134,3 +135,5 @@ export default function ProductCard({ product }) {
     </div>
   );
 }
+
+export default ProductCard; // FAQAT BITTA EXPORT DEFAULT

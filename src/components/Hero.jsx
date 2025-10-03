@@ -2,7 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Hero() {
+function Hero() {
   return (
     <section className="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-16 mb-8">
       <div className="container mx-auto px-4 text-center">
@@ -30,3 +30,5 @@ export default function Hero() {
     </section>
   );
 }
+
+export default Hero; // FAQAT BITTA EXPORT DEFAULT

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import { clearLikes } from "../redux/likeSlice";
 
-export default function Wishlist() {
+function Wishlist() {
   const { data } = useSelector(s => s.likeSlice);
   const dispatch = useDispatch();
 
@@ -67,3 +67,5 @@ export default function Wishlist() {
     </div>
   );
 }
+
+export default Wishlist; 

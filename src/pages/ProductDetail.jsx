@@ -5,10 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "../redux/productSlice";
 import { addToCartLocal } from "../redux/localCartSlice";
 import { addToLike, removeFromLike } from "../redux/likeSlice";
-import { addToMarketCart } from "../redux/marketSlice";
+import { addToMarketAPI, addToBuyurtmaAPI } from "../redux/localCartSlice";
 import { Link } from "react-router-dom";
 
-export default function ProductDetail() {
+function ProductDetail() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { productDetail, status } = useSelector(s => s.productSlice);
@@ -31,10 +31,9 @@ export default function ProductDetail() {
 
   const handleAddToMarket = async () => {
     try {
-      await dispatch(addToMarketCart({
+      await dispatch(addToMarketAPI({
         ...productDetail,
-        quantity: quantity,
-        total: productDetail.price * quantity
+        quantity: quantity
       })).unwrap();
       alert('✅ Mahsulot marketga muvaffaqiyatli saqlandi!');
     } catch (error) {
@@ -45,26 +44,14 @@ export default function ProductDetail() {
 
   const handleAddToBuyurtma = async () => {
     try {
-      // Buyurtma API ga qo'shish - agar alohida API bo'lsa
-      const response = await fetch('https://68a6b3c3639c6a54e99f8b80.mockapi.io/dustim/buyurtma', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...productDetail,
-          quantity: quantity,
-          total: productDetail.price * quantity,
-          orderedAt: new Date().toISOString(),
-          status: 'pending'
-        }),
-      });
-      
-      if (response.ok) {
-        alert(`✅ ${quantity} ta mahsulot buyurtmaga qo'shildi!`);
-      } else {
-        throw new Error('Server error');
-      }
+      await dispatch(addToBuyurtmaAPI({
+        ...productDetail,
+        quantity: quantity,
+        productName: productDetail.title || productDetail.name,
+        productPrice: productDetail.price,
+        productImage: productDetail.thumbnail || productDetail.image
+      })).unwrap();
+      alert(`✅ ${quantity} ta mahsulot buyurtmaga qo'shildi!`);
     } catch (error) {
       console.error('Error adding to buyurtma:', error);
       alert('❌ Buyurtmaga qoshishda xatolik yuz berdi');
@@ -300,3 +287,5 @@ export default function ProductDetail() {
     </div>
   );
 }
+
+export default ProductDetail; // FAQAT BITTA EXPORT DEFAULT

@@ -10,14 +10,20 @@ const api = axios.create({
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache'
   }
 });
+
+// Har bir so'rovga cache busting parametri qo'shamiz
+const addCacheBust = (url) => {
+  return `${url}${url.includes('?') ? '&' : '?'}_=${Date.now()}`;
+};
 
 export const cartAPI = {
   // Market (Mahsulotlar) API
   getMarketProducts: async () => {
     try {
-      const response = await api.get(MARKET_API_URL);
+      const response = await api.get(addCacheBust(MARKET_API_URL));
       return response.data;
     } catch (error) {
       console.error('Error fetching market products:', error);
@@ -81,7 +87,7 @@ export const cartAPI = {
   // Buyurtma (Savat) API
   getBuyurtmalar: async () => {
     try {
-      const response = await api.get(BUYURTMA_API_URL);
+      const response = await api.get(addCacheBust(BUYURTMA_API_URL));
       return response.data;
     } catch (error) {
       console.error('Error fetching buyurtmalar:', error);
