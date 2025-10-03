@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import ProductCard from "../components/ProductCard";
-import { removeFromLike } from "../redux/likeSlice";
+import { removeFromLike } from "../redux/like-Slice";
 
 export default function Wishlist(){
   const { data } = useSelector(s => s.likeSlice);

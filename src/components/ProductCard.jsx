@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addToLike } from "../redux/likeSlice";
+import { addToLike } from "../redux/like-Slice";
 import { addToCartLocal } from "../redux/localCartSlice";
 
 export default function ProductCard({ product }){
