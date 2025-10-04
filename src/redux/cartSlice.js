@@ -12,20 +12,40 @@ export const fetchCartByUser = createAsyncThunk('carts/fetchByUser', async (user
   return data.carts || [];
 });
 
-const slice = createSlice({
+const cartSlice = createSlice({
   name: 'cartSlice',
-  initialState: { carts: [], userCarts: [], status: 'idle', error: null },
+  initialState: { 
+    carts: [], 
+    userCarts: [], 
+    status: 'idle', 
+    error: null 
+  },
   reducers: {},
   extraReducers: builder => {
     builder
-      .addCase(fetchCarts.pending, state => { state.status = 'loading'; })
-      .addCase(fetchCarts.fulfilled, (state, action) => { state.status = 'succeeded'; state.carts = action.payload; })
-      .addCase(fetchCarts.rejected, (state, action) => { state.status = 'failed'; state.error = action.error.message; })
-
-      .addCase(fetchCartByUser.pending, state => { state.status = 'loading'; })
-      .addCase(fetchCartByUser.fulfilled, (state, action) => { state.status = 'succeeded'; state.userCarts = action.payload; })
-      .addCase(fetchCartByUser.rejected, (state, action) => { state.status = 'failed'; state.error = action.error.message; });
+      .addCase(fetchCarts.pending, state => { 
+        state.status = 'loading'; 
+      })
+      .addCase(fetchCarts.fulfilled, (state, action) => { 
+        state.status = 'succeeded'; 
+        state.carts = action.payload; 
+      })
+      .addCase(fetchCarts.rejected, (state, action) => { 
+        state.status = 'failed'; 
+        state.error = action.error.message; 
+      })
+      .addCase(fetchCartByUser.pending, state => { 
+        state.status = 'loading'; 
+      })
+      .addCase(fetchCartByUser.fulfilled, (state, action) => { 
+        state.status = 'succeeded'; 
+        state.userCarts = action.payload; 
+      })
+      .addCase(fetchCartByUser.rejected, (state, action) => { 
+        state.status = 'failed'; 
+        state.error = action.error.message; 
+      });
   }
 });
 
-export default slice.reducer;
+export default cartSlice.reducer;
