@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import ProductCard from "../components/ProductCard";
-import { removeFromLike, clearLike } from "../redux/like-Slice";
+import ProductCard from "../components/ProductCard.jsx";
+import { removeFromLike, clearLike } from "../redux/like-Slice.js";
 import { Link } from "react-router-dom";
 
 export default function Wishlist(){
@@ -9,12 +9,14 @@ export default function Wishlist(){
   const dispatch = useDispatch();
 
   const handleClearWishlist = () => {
-    dispatch(clearLike());
+    if (window.confirm('Are you sure you want to clear your wishlist?')) {
+      dispatch(clearLike());
+    }
   };
 
   if (wishlist.length === 0) {
     return (
-      <div className="container mx-auto py-12">
+      <div className="max-w-7xl mx-auto py-12 px-4">
         <div className="text-center max-w-md mx-auto">
           <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -37,7 +39,7 @@ export default function Wishlist(){
   }
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="max-w-7xl mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">My Wishlist</h1>

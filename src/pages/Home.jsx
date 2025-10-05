@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
-import Hero from "../components/Hero";
+import Hero from "../components/Hero.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../redux/productSlice";
-import ProductCard from "../components/ProductCard";
+import { fetchProducts } from "../redux/productSlice.js";
+import ProductCard from "../components/ProductCard.jsx";
 import { Link } from "react-router-dom";
 
 export default function Home(){
   const dispatch = useDispatch();
-  const { products, status } = useSelector(s => s.productSlice);
+  const { products, status, apiSource } = useSelector(s => s.productSlice);
 
   useEffect(() => { 
     dispatch(fetchProducts()); 
@@ -19,7 +19,18 @@ export default function Home(){
     <div>
       <Hero />
       
-      <div className="container mx-auto py-12">
+      <div className="max-w-7xl mx-auto py-12 px-4">
+        {/* API Status */}
+        <div className="mb-6 text-center">
+          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+            apiSource === 'mockapi' 
+              ? 'bg-green-100 text-green-800' 
+              : 'bg-blue-100 text-blue-800'
+          }`}>
+            Data Source: {apiSource === 'mockapi' ? 'MockAPI' : 'DummyJSON'}
+          </span>
+        </div>
+
         {/* Featured Products */}
         <div className="mb-12">
           <div className="flex justify-between items-center mb-8">

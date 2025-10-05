@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductById } from "../redux/productSlice";
-import { addToCartLocal } from "../redux/localCartSlice";
-import { addToLike, removeFromLike } from "../redux/like-Slice";
+import { fetchProductById } from "../redux/productSlice.js";
+import { addToCartLocal } from "../redux/localCartSlice.js";
+import { addToLike, removeFromLike } from "../redux/like-Slice.js";
 
 export default function ProductDetail(){
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { productDetail, status } = useSelector(s => s.productSlice);
+  const { productDetail, status, apiSource } = useSelector(s => s.productSlice);
   const { data: wishlist } = useSelector(s => s.likeSlice);
   
   const [selectedImage, setSelectedImage] = useState(0);
@@ -21,7 +21,7 @@ export default function ProductDetail(){
 
   if (status === 'loading') {
     return (
-      <div className="container mx-auto py-8">
+      <div className="max-w-7xl mx-auto py-8 px-4">
         <div className="animate-pulse">
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-gray-200 rounded-xl h-96"></div>
@@ -38,7 +38,7 @@ export default function ProductDetail(){
 
   if (!productDetail) {
     return (
-      <div className="container mx-auto py-12 text-center">
+      <div className="max-w-7xl mx-auto py-12 text-center px-4">
         <h2 className="text-3xl font-bold text-gray-600 mb-4">Product Not Found</h2>
         <p className="text-gray-500 mb-8">The product you're looking for doesn't exist.</p>
         <button 
@@ -52,7 +52,58 @@ export default function ProductDetail(){
   }
 
   const isInWishlist = wishlist.find(item => item.id === productDetail.id);
-  const images = [productDetail.thumbnail, ...(productDetail.images || [])];
+  
+  // Ikkala API strukturasiga moslashtirish
+  const getProductImages = () => {
+    if (productDetail.images && productDetail.images.length > 0) {
+      return productDetail.images;
+    }
+    if (productDetail.image) return [productDetail.image];
+    if (productDetail.thumbnail) return [productDetail.thumbnail];
+    return ["https://via.placeholder.com/400x300/4F46E5/FFFFFF?text=No+Image"];
+  };
+
+  const getProductTitle = () => {
+    return productDetail.title || productDetail.name || "No Title";
+  };
+
+  const getProductPrice = () => {
+    return productDetail.price || 0;
+  };
+
+  const getProductRating = () => {
+    return productDetail.rating || 0;
+  };
+
+  const getProductBrand = () => {
+    return productDetail.brand || "Unknown Brand";
+  };
+
+  const getProductDescription = () => {
+    return productDetail.description || "No description available";
+  };
+
+  const getProductCategory = () => {
+    return productDetail.category || "Uncategorized";
+  };
+
+  const getProductStock = () => {
+    return productDetail.stock || productDetail.quantity || 0;
+  };
+
+  const getDiscountPercentage = () => {
+    return productDetail.discountPercentage || productDetail.discount || 0;
+  };
+
+  const productImages = getProductImages();
+  const productTitle = getProductTitle();
+  const productPrice = getProductPrice();
+  const productRating = getProductRating();
+  const productBrand = getProductBrand();
+  const productDescription = getProductDescription();
+  const productCategory = getProductCategory();
+  const productStock = getProductStock();
+  const discountPercentage = getDiscountPercentage();
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
@@ -69,14 +120,25 @@ export default function ProductDetail(){
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="max-w-7xl mx-auto py-8 px-4">
+      {/* API manbasi ko'rsatkich */}
+      <div className="mb-4">
+        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+          apiSource === 'mockapi' 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-blue-100 text-blue-800'
+        }`}>
+          {apiSource === 'mockapi' ? 'MockAPI' : 'DummyJSON'}
+        </span>
+      </div>
+
       {/* Breadcrumb */}
       <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8">
         <Link to="/" className="hover:text-indigo-600">Home</Link>
         <span>/</span>
-        <Link to="/shop" className="hover:text-indigo-600 capitalize">{productDetail.category}</Link>
+        <Link to="/shop" className="hover:text-indigo-600 capitalize">{productCategory}</Link>
         <span>/</span>
-        <span className="text-gray-900 font-medium line-clamp-1">{productDetail.title}</span>
+        <span className="text-gray-900 font-medium line-clamp-1">{productTitle}</span>
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -84,37 +146,45 @@ export default function ProductDetail(){
         <div>
           <div className="bg-white rounded-xl border border-gray-200 p-4 mb-4">
             <img
-              src={images[selectedImage]}
-              alt={productDetail.title}
+              src={productImages[selectedImage]}
+              alt={productTitle}
               className="w-full h-96 object-contain rounded-lg"
+              onError={(e) => {
+                e.target.src = "https://via.placeholder.com/400x300/4F46E5/FFFFFF?text=No+Image";
+              }}
             />
           </div>
-          <div className="flex gap-3 overflow-x-auto pb-2">
-            {images.map((image, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedImage(index)}
-                className={`flex-shrink-0 w-20 h-20 border-2 rounded-lg overflow-hidden transition-all ${
-                  selectedImage === index 
-                    ? "border-indigo-500 ring-2 ring-indigo-200" 
-                    : "border-gray-200 hover:border-gray-300"
-                }`}
-              >
-                <img
-                  src={image}
-                  alt={`${productDetail.title} ${index + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
+          {productImages.length > 1 && (
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {productImages.map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedImage(index)}
+                  className={`flex-shrink-0 w-20 h-20 border-2 rounded-lg overflow-hidden transition-all ${
+                    selectedImage === index 
+                      ? "border-indigo-500 ring-2 ring-indigo-200" 
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
+                >
+                  <img
+                    src={image}
+                    alt={`${productTitle} ${index + 1}`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.src = "https://via.placeholder.com/80x80/4F46E5/FFFFFF?text=Img";
+                    }}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Product Info */}
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              {productDetail.title}
+              {productTitle}
             </h1>
             
             <div className="flex items-center gap-4 mb-4">
@@ -123,7 +193,7 @@ export default function ProductDetail(){
                   <svg
                     key={i}
                     className={`w-5 h-5 ${
-                      i < Math.floor(productDetail.rating)
+                      i < Math.floor(productRating)
                         ? "text-yellow-400"
                         : "text-gray-300"
                     }`}
@@ -134,48 +204,48 @@ export default function ProductDetail(){
                   </svg>
                 ))}
                 <span className="ml-2 text-gray-600 font-medium">
-                  {productDetail.rating} • {productDetail.reviews || 0} reviews
+                  {productRating} • {productDetail.reviews || 0} reviews
                 </span>
               </div>
               
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                productDetail.stock > 0 
+                productStock > 0 
                   ? "bg-green-100 text-green-800" 
                   : "bg-red-100 text-red-800"
               }`}>
-                {productDetail.stock > 0 ? `${productDetail.stock} in stock` : 'Out of stock'}
+                {productStock > 0 ? `${productStock} in stock` : 'Out of stock'}
               </span>
             </div>
 
             <div className="flex items-center gap-4 mb-6">
               <span className="text-4xl font-bold text-green-600">
-                ${productDetail.price}
+                ${productPrice}
               </span>
-              {productDetail.discountPercentage && (
-                <span className="text-xl text-red-500 line-through">
-                  ${(productDetail.price / (1 - productDetail.discountPercentage/100)).toFixed(2)}
-                </span>
-              )}
-              {productDetail.discountPercentage && (
-                <span className="bg-red-500 text-white px-2 py-1 rounded text-sm font-semibold">
-                  Save {Math.round(productDetail.discountPercentage)}%
-                </span>
+              {discountPercentage > 0 && (
+                <>
+                  <span className="text-xl text-red-500 line-through">
+                    ${(productPrice / (1 - discountPercentage/100)).toFixed(2)}
+                  </span>
+                  <span className="bg-red-500 text-white px-2 py-1 rounded text-sm font-semibold">
+                    Save {Math.round(discountPercentage)}%
+                  </span>
+                </>
               )}
             </div>
           </div>
 
           <p className="text-gray-700 text-lg leading-relaxed">
-            {productDetail.description}
+            {productDescription}
           </p>
 
           <div className="space-y-3">
             <div className="flex">
               <span className="font-semibold text-gray-900 w-32">Brand:</span>
-              <span className="text-gray-700">{productDetail.brand}</span>
+              <span className="text-gray-700">{productBrand}</span>
             </div>
             <div className="flex">
               <span className="font-semibold text-gray-900 w-32">Category:</span>
-              <span className="text-gray-700 capitalize">{productDetail.category}</span>
+              <span className="text-gray-700 capitalize">{productCategory}</span>
             </div>
             <div className="flex">
               <span className="font-semibold text-gray-900 w-32">SKU:</span>
@@ -207,10 +277,10 @@ export default function ProductDetail(){
             <div className="flex gap-4">
               <button
                 onClick={handleAddToCart}
-                disabled={productDetail.stock === 0}
+                disabled={productStock === 0}
                 className="flex-1 bg-green-600 text-white py-4 px-6 rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-semibold text-lg"
               >
-                {productDetail.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+                {productStock > 0 ? 'Add to Cart' : 'Out of Stock'}
               </button>
               
               <button

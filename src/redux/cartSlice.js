@@ -1,15 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+const MOCKAPI_BASE_URL = "https://68a6b3c3639c6a54e99f8b80.mockapi.io/dustim/market";
+
 export const fetchCarts = createAsyncThunk('carts/fetchAll', async () => {
-  const res = await fetch('https://dummyjson.com/carts');
+  const res = await fetch(`${MOCKAPI_BASE_URL}/carts`);
   const data = await res.json();
-  return data.carts;
+  return data;
 });
 
 export const fetchCartByUser = createAsyncThunk('carts/fetchByUser', async (userId) => {
-  const res = await fetch(`https://dummyjson.com/carts/user/${userId}`);
+  const res = await fetch(`${MOCKAPI_BASE_URL}/carts?userId=${userId}`);
   const data = await res.json();
-  return data.carts || [];
+  return data || [];
 });
 
 const cartSlice = createSlice({

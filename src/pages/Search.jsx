@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ProductCard from "../components/ProductCard";
-import { searchProducts } from "../redux/productSlice";
+import ProductCard from "../components/ProductCard.jsx";
+import { searchProducts } from "../redux/productSlice.js";
 
 export default function Search(){
   const [query, setQuery] = useState('');
   const dispatch = useDispatch();
-  const { products, status } = useSelector(s => s.productSlice);
+  const { products, status, apiSource } = useSelector(s => s.productSlice);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -15,7 +15,18 @@ export default function Search(){
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="max-w-7xl mx-auto py-8 px-4">
+      {/* API Status */}
+      <div className="mb-6">
+        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+          apiSource === 'mockapi' 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-blue-100 text-blue-800'
+        }`}>
+          Data Source: {apiSource === 'mockapi' ? 'MockAPI' : 'DummyJSON'}
+        </span>
+      </div>
+
       <h1 className="text-3xl font-bold text-gray-900 mb-2">Search Products</h1>
       <p className="text-gray-600 mb-8">Find your favorite products from our catalog</p>
 
@@ -70,20 +81,6 @@ export default function Search(){
           <p className="text-gray-500 mb-6">
             No results found for "<span className="font-semibold">{query}</span>". Try different keywords.
           </p>
-          <div className="space-y-2 text-sm text-gray-600">
-            <p>Try searching for:</p>
-            <div className="flex gap-2 justify-center flex-wrap">
-              {['iphone', 'laptop', 'perfume', 'skincare', 'groceries'].map(keyword => (
-                <button
-                  key={keyword}
-                  onClick={() => setQuery(keyword)}
-                  className="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded transition-colors"
-                >
-                  {keyword}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       ) : (
         <div className="text-center py-12">

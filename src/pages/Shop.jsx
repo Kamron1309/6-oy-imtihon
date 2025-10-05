@@ -1,19 +1,30 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../redux/productSlice";
-import ProductCard from "../components/ProductCard";
-import Sidebar from "../components/Sidebar";
+import { fetchProducts } from "../redux/productSlice.js";
+import ProductCard from "../components/ProductCard.jsx";
+import Sidebar from "../components/Sidebar.jsx";
 
 export default function Shop(){
   const dispatch = useDispatch();
-  const { products, status } = useSelector(s => s.productSlice);
+  const { products, status, apiSource } = useSelector(s => s.productSlice);
 
   useEffect(() => { 
     dispatch(fetchProducts()); 
   }, [dispatch]);
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="max-w-7xl mx-auto py-8 px-4">
+      {/* API Status */}
+      <div className="mb-6">
+        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+          apiSource === 'mockapi' 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-blue-100 text-blue-800'
+        }`}>
+          Data Source: {apiSource === 'mockapi' ? 'MockAPI' : 'DummyJSON'}
+        </span>
+      </div>
+
       <div className="flex flex-col md:flex-row gap-8">
         {/* Sidebar */}
         <Sidebar />
